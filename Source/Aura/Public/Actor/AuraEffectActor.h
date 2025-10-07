@@ -42,7 +42,6 @@ struct FGameplayEffectRule
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EEffectRemovalPolicy Removal = EEffectRemovalPolicy::DoNotRemove;
-	
 };
 
 UCLASS()
@@ -57,19 +56,33 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
-	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass, float EffectLevel, EEffectRemovalPolicy RemovalPolicy);
+	void ApplyEffectToTarget(
+		AActor* TargetActor,
+		TSubclassOf<UGameplayEffect> GameplayEffectClass,
+		float EffectLevel = 1.f,
+		EEffectRemovalPolicy RemovalPolicy = EEffectRemovalPolicy::DoNotRemove
+	);
 
-	UFUNCTION(BlueprintCallable, meta=(DefaultToSelf="Target", DisplayName="Apply Configured Effects (Begin Overlap)"))
-	void ApplyConfiguredEffects_OnOverlap(AActor* TargetActor);
+	UFUNCTION(BlueprintCallable, meta=(DefaultToSelf="TargetActor", DisplayName="Process Effects (Begin Overlap)",
+		ToolTip="Processes Multi Effect Rules configured in Details Panel."))
+	void ProcessBeginOverlap(AActor* TargetActor);
 
-	UFUNCTION(BlueprintCallable)
-	void OnEndOverlap(AActor* TargetActor);
+	UFUNCTION(BlueprintCallable, meta=(DefaultToSelf="TargetActor", DisplayName="Process Effects (End Overlap)",
+		ToolTip="Processes Multi Effect Rules configured in Details Panel"))
+	void ProcessEndOverlap(AActor* TargetActor);
 
 	/** UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	bool bDestroyOnEffectRemoval = false; */
-	
+
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
-	TArray<FGameplayEffectRule> GameplayEffectRules;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects",
+		meta=(DisplayName="Manual Effect Class",
+			ToolTip="For direct use with 'Apply Effect To Target'. Not processed by overlap functions."))
+	TSubclassOf<UGameplayEffect> ManualEffectClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects|Multi",
+		meta=(DisplayName="Multi Effect Rules",
+			ToolTip="Effects auto-applied/removed by Process... functions."))
+	TArray<FGameplayEffectRule> MultiEffectRules;
 };
