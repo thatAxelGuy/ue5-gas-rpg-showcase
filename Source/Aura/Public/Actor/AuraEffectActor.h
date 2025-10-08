@@ -34,8 +34,8 @@ struct FGameplayEffectRule
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TSubclassOf<UGameplayEffect> EffectClass = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin="0.0"))
-	float Level = 1.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AppliedEffects", meta=(ClampMin="0.0"))
+	float EffectLevel = 1.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EEffectApplicationPolicy Application = EEffectApplicationPolicy::DoNotApply;
@@ -58,8 +58,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ApplyEffectToTarget(
 		AActor* TargetActor,
-		TSubclassOf<UGameplayEffect> GameplayEffectClass,
-		float EffectLevel = 1.f,
+		TSubclassOf<UGameplayEffect> EffectClass,
+		float Level = 1.f,
 		EEffectRemovalPolicy RemovalPolicy = EEffectRemovalPolicy::DoNotRemove
 	);
 
@@ -71,18 +71,20 @@ protected:
 		ToolTip="Processes Multi Effect Rules configured in Details Panel"))
 	void ProcessEndOverlap(AActor* TargetActor);
 
-	/** UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
-	bool bDestroyOnEffectRemoval = false; */
-
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects",
-		meta=(DisplayName="Manual Effect Class",
-			ToolTip="For direct use with 'Apply Effect To Target'. Not processed by overlap functions."))
-	TSubclassOf<UGameplayEffect> ManualEffectClass;
+		meta=(DisplayName= "Gameplay Effect Class",
+			ToolTip="Use with 'Apply Effect To Target' Function Node"))
+	TSubclassOf<UGameplayEffect> GameplayEffectClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects", meta=(ClampMin="0.0"))
+	float EffectLevel = 1.f;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects|Multi",
 		meta=(DisplayName="Multi Effect Rules",
-			ToolTip="Effects auto-applied/removed by Process... functions."))
-	TArray<FGameplayEffectRule> MultiEffectRules;
+			ToolTip="Effects are auto-applied/removed by Process Overlap functions."))
+	TArray<FGameplayEffectRule> MultipleEffectRules;
+
+	
 };

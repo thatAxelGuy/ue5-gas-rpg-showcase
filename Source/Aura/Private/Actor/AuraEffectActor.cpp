@@ -22,9 +22,9 @@ void AAuraEffectActor::BeginPlay()
 
 void AAuraEffectActor::ApplyEffectToTarget(
 	AActor* TargetActor,
-	const TSubclassOf<UGameplayEffect> GameplayEffectClass,
-	const float EffectLevel,
-	EEffectRemovalPolicy RemovalPolicy
+	const TSubclassOf<UGameplayEffect> EffectClass,
+	const float Level,
+	const EEffectRemovalPolicy RemovalPolicy
 )
 {
 	UAbilitySystemComponent* TargetAbilitySystemComponent =
@@ -32,7 +32,7 @@ void AAuraEffectActor::ApplyEffectToTarget(
 	if (TargetAbilitySystemComponent == nullptr) return;
 
 	//check(GameplayEffectClass);
-	if (!ensureMsgf(GameplayEffectClass != nullptr,
+	if (!ensureMsgf(EffectClass != nullptr,
 	                TEXT("%s: ApplyEffectToTarget called without GameplayEffectClass variable set"), *GetName()))
 	{
 		return;
@@ -41,7 +41,7 @@ void AAuraEffectActor::ApplyEffectToTarget(
 	FGameplayEffectContextHandle EffectContextHandle = TargetAbilitySystemComponent->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle EffectSpecHandle = TargetAbilitySystemComponent->MakeOutgoingSpec(
-		GameplayEffectClass, EffectLevel, EffectContextHandle);
+		EffectClass, Level, EffectContextHandle);
 
 	/** ---- Validation ----*/
 	if (!EffectSpecHandle.IsValid() || !EffectSpecHandle.Data.IsValid()) return;
@@ -63,17 +63,17 @@ void AAuraEffectActor::ApplyEffectToTarget(
 void AAuraEffectActor::ProcessBeginOverlap(AActor* TargetActor)
 {
 	if (!HasAuthority()) return;
-	if (MultiEffectRules.IsEmpty())
+	if (MultipleEffectRules.IsEmpty())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s has no multieffectrules defined"), *GetName());
 		return;
 	}
-	for (const auto& Rule : MultiEffectRules)
+	for (const auto& Rule : MultipleEffectRules)
 	{
 		if (Rule.Application == EEffectApplicationPolicy::ApplyOnOverlap)
 		{
 			if (!Rule.EffectClass) continue;
-			ApplyEffectToTarget(TargetActor, Rule.EffectClass, Rule.Level, Rule.Removal);
+			ApplyEffectToTarget(TargetActor, Rule.EffectClass, Rule.EffectLevel, Rule.Removal);
 		}
 	}
 }
@@ -82,19 +82,19 @@ void AAuraEffectActor::ProcessBeginOverlap(AActor* TargetActor)
 void AAuraEffectActor::ProcessEndOverlap(AActor* TargetActor)
 {
 	if (!HasAuthority()) return;
-	if (MultiEffectRules.IsEmpty())
+	if (MultipleEffectRules.IsEmpty())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s has no multi effects defined"), *GetName());
 		return;
 	}
 
 	// Apply any On End Overlap Rules
-	for (const auto& Rule : MultiEffectRules)
+	for (const auto& Rule : MultipleEffectRules)
 	{
 		if (Rule.Application == EEffectApplicationPolicy::ApplyOnEndOverlap)
 		{
 			if (!Rule.EffectClass) continue;
-			ApplyEffectToTarget(TargetActor, Rule.EffectClass, Rule.Level, Rule.Removal);
+			ApplyEffectToTarget(TargetActor, Rule.EffectClass, Rule.EffectLevel, Rule.Removal);
 		}
 	}
 
