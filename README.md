@@ -1,5 +1,7 @@
 # UE5 GAS RPG Tech Design Sandbox
 
+![Click To Move](https://github.com/thatAxelGuy/ue5-gas-rpg-showcase/blob/gameplayAbilities/IMG/ClickToMove.png)
+
 This repository is a **technical design showcase** built with Unreal Engine 5.  
 It demonstrates modular gameplay systems with a focus on the **Gameplay Ability System (GAS)**, RPG mechanics, and systemic tools.
 
