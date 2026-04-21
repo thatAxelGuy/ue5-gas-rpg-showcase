@@ -6,6 +6,10 @@
 *.iml
 out/
 
+# Unreal Derived Data Cache
+DerivedDataCache/
+LocalDerivedDataCache/
+
 # Compiled Object files
 *.slo
 *.lo
