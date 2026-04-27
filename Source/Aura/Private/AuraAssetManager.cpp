@@ -17,7 +17,8 @@ UAuraAssetManager& UAuraAssetManager::Get()
 void UAuraAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
-
 	FAuraGameplayTags::InitializeNativeGameplayTags();
 	
+	// Required to use TargetData
+	UAbilitySystemGlobals::Get().InitGlobalData();
 }
