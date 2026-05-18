@@ -129,21 +129,6 @@ void UAuraAttributeSet::SetEffectProperties(const struct FGameplayEffectModCallb
 		                        : Cast<ACharacter>(Props.TargetAvatarActor);
 }
 
-void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, const float Damage) const
-{
-	if (Props.SourceCharacter != Props.TargetCharacter)
-	{
-		if (AAuraPlayerController * PC = Cast<AAuraPlayerController>(
-			UGameplayStatics::GetPlayerController(Props.TargetAvatarActor, 0)))
-		{
-			if (Props.TargetCharacter)
-			{
-				PC->ShowDamageNumber(Damage, Props.TargetCharacter);
-			}
-		}
-	}
-}
-
 void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -184,6 +169,21 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 			}
 			
 			ShowFloatingText(Props, LocalIncomingDamage);
+		}
+	}
+}
+
+void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, const float Damage) const
+{
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		if (AAuraPlayerController * PC = Cast<AAuraPlayerController>(
+			UGameplayStatics::GetPlayerController(Props.TargetAvatarActor, 0)))
+		{
+			if (Props.TargetCharacter)
+			{
+				PC->ShowDamageNumber(Damage, Props.TargetCharacter);
+			}
 		}
 	}
 }
