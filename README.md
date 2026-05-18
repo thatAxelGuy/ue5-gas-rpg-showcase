@@ -11,7 +11,7 @@ It demonstrates modular gameplay systems with a focus on the **Gameplay Ability 
 - [ ] Interaction Tools (Component, Data-driven items, Cheats)
 
 ## Getting Started
-TODO: Setup Instructions 
+TODO: UPDATE README
 
 ## Documentation
 Planned docs:  
