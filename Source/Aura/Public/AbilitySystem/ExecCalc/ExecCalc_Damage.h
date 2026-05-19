@@ -21,4 +21,6 @@ public:
 		const FGameplayEffectCustomExecutionParameters& ExecutionParams,
 		FGameplayEffectCustomExecutionOutput& OutExecutionOutput
 		) const override;
+	
+	
 };
